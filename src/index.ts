@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit'
 import { request } from 'http';
-
+import errorMiddleware from './middleware/errorMiddleware'
 
 const port = 3000;
 
@@ -36,6 +36,7 @@ app.use(
 
 // add routing for / path
 app.get('/', (req, res) => {
+  //throw new Error('Error exist');
   res.json({
     message: 'Hello World 🌍',
   })
@@ -48,6 +49,15 @@ app.post('/', (req, res) => {
     data: req.body,
   })
 });
+
+// error handler middleware
+app.use(errorMiddleware)
+
+app.use(function (_req, res) {
+    res.status(404).json({
+      message: 'Ohh you are lost, read the API documentation to find your way back home 😂',
+    });
+  })
 
 // start express server
 app.listen(port, ()=> {
