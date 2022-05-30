@@ -4,11 +4,30 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit'
 import { request } from 'http';
 import errorMiddleware from './middleware/errorMiddleware'
+import config from  './config';
+import db from  './database';
 
-const port = 3000;
+const port = config.port || 3000;
 
 // create instant server
 const app = express();
+
+// test db  
+db.connect().then((client) => {
+  return client
+    .query('SELECT NOW()')
+    .then((res) => {
+      client.release()
+      console.log(res.rows[0].now)
+    })
+    .catch((err) => {
+      // Make sure to release the client before any error handling,
+      // just in case the error handling itself throws an error.
+      client.release()
+      console.log(err.stack)
+    })
+})
+
 
 // HTTP request logger middleware
 app.use(morgan('common'));
