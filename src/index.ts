@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit'
+import routes from './routes';
 import { request } from 'http';
 import errorMiddleware from './middleware/errorMiddleware'
 import config from  './config';
@@ -35,7 +36,7 @@ app.use(morgan('common'));
 // HTTP security middleware headers
 app.use(helmet());
 
-// middleware to parse incoming request 
+// middleware to parses incoming request 
 app.use(express.json());
 
 // Basic rate-limiting middleware for Express
@@ -50,24 +51,23 @@ app.use(
   })
 );
 
+app.use('/api', routes);
 
+// // add routing for / path
+// app.get('/', (req, res) => {
+//   //throw new Error('Error exist');
+//   res.json({
+//     message: 'Hello World 🌍',
+//   })
+// });
 
-
-// add routing for / path
-app.get('/', (req, res) => {
-  //throw new Error('Error exist');
-  res.json({
-    message: 'Hello World 🌍',
-  })
-});
-
-// post request
-app.post('/', (req, res) => {
-  res.json({
-    message: 'Hello World 🌍 from post',
-    data: req.body,
-  })
-});
+// // post request
+// app.post('/', (req, res) => {
+//   res.json({
+//     message: 'Hello World 🌍 from post',
+//     data: req.body,
+//   })
+// });
 
 // error handler middleware
 app.use(errorMiddleware)
