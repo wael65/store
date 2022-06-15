@@ -51,6 +51,7 @@ app.use(
   })
 );
 
+// create new usere in database
 app.use('/api', routes);
 
 // // add routing for / path
